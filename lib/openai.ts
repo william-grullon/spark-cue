@@ -1,9 +1,8 @@
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 export async function generateMessage(prompt: string, model = process.env.AI_MODEL || 'gpt-4-turbo') {
   const provider = process.env.AI_PROVIDER || 'openai';
@@ -11,10 +10,10 @@ export async function generateMessage(prompt: string, model = process.env.AI_MOD
     throw new Error(`Unsupported AI provider: ${provider}`);
   }
 
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model,
     messages: [{ role: 'user', content: prompt }],
   });
-  const content = response.data.choices[0].message?.content;
+  const content = response.choices[0].message?.content;
   return content || '';
 }

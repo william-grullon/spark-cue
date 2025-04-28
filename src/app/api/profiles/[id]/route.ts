@@ -2,8 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import db from '@/lib/db';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const idParse = z.object({ id: z.coerce.number() }).safeParse(params);
+interface RequestContext {
+  params: {
+    id: string;
+  }
+}
+
+export async function GET(request: NextRequest, context: RequestContext) {
+  const idParse = z.object({ id: z.coerce.number() }).safeParse(context.params);
   if (!idParse.success) {
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }
@@ -14,9 +20,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   return NextResponse.json(profile);
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: RequestContext) {
   // validate id param
-  const idParse = z.object({ id: z.coerce.number() }).safeParse(params);
+  const idParse = z.object({ id: z.coerce.number() }).safeParse(context.params);
   if (!idParse.success) {
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }
@@ -36,8 +42,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   return NextResponse.json({ ...updated, pictures: JSON.parse(updated.pictures) });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const idParse = z.object({ id: z.coerce.number() }).safeParse(params);
+export async function DELETE(request: NextRequest, context: RequestContext) {
+  const idParse = z.object({ id: z.coerce.number() }).safeParse(context.params);
   if (!idParse.success) {
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }

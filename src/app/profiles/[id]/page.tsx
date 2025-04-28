@@ -5,6 +5,19 @@ import useSWR from "swr";
 import fetcher from "@/utils/fetcher";
 import MessageForm from "@/components/MessageForm";
 import AnalyticsChart from "@/components/AnalyticsChart";
+import Image from "next/image";
+
+// Define a proper type for messages
+interface Message {
+  id: number;
+  message: string;
+  persona: string;
+  created_at: string;
+  sent_at: string | null;
+  responded_at: string | null;
+  response_latency: number | null;
+  profile_id: number;
+}
 
 export default function ProfileDetail({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -52,7 +65,7 @@ export default function ProfileDetail({ params }: { params: { id: string } }) {
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <div className="flex items-center gap-4 mb-4">
-        <img
+        <Image
           src={profile.avatar_url || "/file.svg"}
           alt={profile.name}
           width={64}
@@ -82,7 +95,7 @@ export default function ProfileDetail({ params }: { params: { id: string } }) {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Messages</h2>
         <ul className="space-y-4">
-          {messages.map((msg: any) => (
+          {messages.map((msg: Message) => (
             <li
               key={msg.id}
               className="p-4 bg-white dark:bg-gray-800 rounded shadow"

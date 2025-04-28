@@ -53,8 +53,8 @@ export default function MessageForm({
       if (!addRes.ok) throw new Error("Failed to save message");
       reset();
       onNewMessage?.();
-    } catch (err: any) {
-      setError(err.message || "Error generating message");
+    } catch (err: Error | unknown) {
+      setError(err instanceof Error ? err.message : "Error generating message");
     }
     setLoading(false);
   };
