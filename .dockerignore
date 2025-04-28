@@ -1,0 +1,44 @@
+# Ignore node_modules
+node_modules
+
+# Ignore local environment files
+.env
+.env.*
+
+# Ignore build output
+.next
+out
+
+# Ignore logs
+*.log
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore SQLite database
+*.sqlite
+
+# Ignore other unnecessary files
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
+
+# Ignore IDE-specific files
+.idea
+.vscode
+
+# Ignore test coverage
+coverage
+
+# Ignore miscellaneous
+*.lock
+npm-debug.log*
