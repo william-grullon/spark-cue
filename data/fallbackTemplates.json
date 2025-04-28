@@ -1,0 +1,122 @@
+{
+  "Classy": [
+    "Hi ${name}, your ${pictures[0].description} photo radiates elegance; what's the story behind it?",
+    "Hello ${name}, you brought style to ${pictures[1].description}—care to share where that was?",
+    "Good evening ${name}, that ${pictures[2].description} scene looks straight out of a magazine!",
+    "Greetings ${name}, your ${pictures[0].description} shot exudes sophistication—tell me more about it.",
+    "Hi ${name}, your refined taste at ${pictures[1].description} is inspiring—what drew you there?",
+    "Hello ${name}, I admire how you captured ${pictures[2].description} with such grace.",
+    "Good day ${name}, the composition of your ${pictures[0].description} photo is stunning.",
+    "Hi ${name}, your ${pictures[1].description} moment feels timeless—any background details?",
+    "Hello ${name}, that ${pictures[2].description} image showcases true elegance.",
+    "Greetings ${name}, you’ve mastered the art of the ${pictures[0].description} shot!"
+  ],
+  "Playful": [
+    "Hey ${name}, your ${pictures[0].description} smile is contagious—mind sharing the secret?",
+    "Yo ${name}, that ${pictures[1].description} moment looks like a blast—got tips?",
+    "Hi ${name}, are you always this upbeat or was ${pictures[2].description} a special occasion?",
+    "Hey ${name}, I dare you to top that ${pictures[0].description} photo!",
+    "Yo ${name}, your ${pictures[1].description} vibe is next-level fun—what's the story?",
+    "Hi ${name}, that ${pictures[2].description} shot has me laughing—I need the punchline!",
+    "Hey ${name}, I'm convinced you're secretly a comedian with that ${pictures[0].description} grin.",
+    "Yo ${name}, care to teach me the art of epic ${pictures[1].description}?",
+    "Hi ${name}, is ${pictures[2].description} your go-to for good times?",
+    "Hey ${name}, your ${pictures[0].description} energy is unmatched—let's keep the fun rolling!"
+  ],
+  "Flirty": [
+    "Your ${pictures[0].description} photo has me swooning—what’s the story, ${name}?",
+    "Hi ${name}, that ${pictures[1].description} shot is dangerously charming—should I be careful?",
+    "Hello ${name}, I can’t stop staring at your ${pictures[2].description} pic—mind if I ask more?",
+    "Hey ${name}, your ${pictures[0].description} smile is pure temptation.",
+    "Hi ${name}, that ${pictures[1].description} moment looks like a dream—am I in it?",
+    "Hello ${name}, the way you captured ${pictures[2].description} is utterly captivating.",
+    "Hey ${name}, you and ${pictures[0].description} have undeniable chemistry.",
+    "Hi ${name}, care to share how you got that ${pictures[1].description} shot so perfect?",
+    "Hello ${name}, I think your ${pictures[2].description} image just stole my heart.",
+    "Hey ${name}, that ${pictures[0].description} photo should come with a warning label!"
+  ],
+  "Adventurous": [
+    "Hi ${name}, your ${pictures[0].description} shot screams adventure! Where was it taken?",
+    "Hello ${name}, that ${pictures[1].description} scene is breathtaking—what's the story there?",
+    "Hey ${name}, you look like you’re having an amazing time in your ${pictures[2].description} photo!",
+    "Greetings ${name}, your ${pictures[0].description} picture is full of life—care to share more?",
+    "Hi ${name}, I love how your ${pictures[1].description} shot captures the spirit of adventure!",
+    "Hello ${name}, that ${pictures[2].description} image is stunning—what's the tale behind it?",
+    "Hey ${name}, your ${pictures[0].description} moment is pure gold—where was it taken?",
+    "Hi ${name}, you and your friends look like you're on an epic journey in that ${pictures[1].description} pic!",
+    "Hello ${name}, the energy in your ${pictures[2].description} photo is contagious!",
+    "Greetings ${name}, your ${pictures[0].description} shot is a masterpiece of adventure!"
+  ],
+  "Intellectual": [
+    "Hi ${name}, your ${pictures[0].description} photo is intriguing—what's the story behind it?",
+    "Hello ${name}, that ${pictures[1].description} shot provokes thought—care to share more?",
+    "Good evening ${name}, your ${pictures[2].description} image is captivating—what were you thinking?",
+    "Greetings ${name}, the concept behind your ${pictures[0].description} photo is fascinating.",
+    "Hi ${name}, I love how your ${pictures[1].description} shot challenges perceptions.",
+    "Hello ${name}, your ${pictures[2].description} picture tells a compelling story.",
+    "Good day ${name}, the depth of your ${pictures[0].description} photo is impressive.",
+    "Hi ${name}, your ${pictures[1].description} moment is thought-provoking—any background info?",
+    "Hello ${name}, that ${pictures[2].description} image is rich with meaning.",
+    "Greetings ${name}, you have a unique perspective, beautifully captured in the ${pictures[0].description} shot!"
+  ],
+  "Sweet": [
+    "Hi ${name}, your ${pictures[0].description} photo just made my day—what a smile!",
+    "Hello ${name}, that ${pictures[1].description} moment is so sweet, it looks like a movie still!",
+    "Good evening ${name}, your ${pictures[2].description} image radiates warmth and happiness.",
+    "Greetings ${name}, the joy in your ${pictures[0].description} shot is palpable!",
+    "Hi ${name}, your ${pictures[1].description} picture is like a breath of fresh air.",
+    "Hello ${name}, I can't help but smile at your ${pictures[2].description} photo.",
+    "Good day ${name}, your ${pictures[0].description} moment is simply delightful.",
+    "Hi ${name}, that ${pictures[1].description} image is a perfect capture of happiness.",
+    "Hello ${name}, your ${pictures[2].description} shot is a ray of sunshine!",
+    "Greetings ${name}, you have a gift for capturing sweet moments, like in this ${pictures[0].description} photo."
+  ],
+  "Bold": [
+    "Hi ${name}, your ${pictures[0].description} shot is striking—what's the story behind it?",
+    "Hello ${name}, that ${pictures[1].description} image is powerful—care to share more?",
+    "Good evening ${name}, your ${pictures[2].description} photo commands attention!",
+    "Greetings ${name}, the intensity of your ${pictures[0].description} shot is captivating.",
+    "Hi ${name}, I love the daring nature of your ${pictures[1].description} photo!",
+    "Hello ${name}, your ${pictures[2].description} image is bold and beautiful.",
+    "Good day ${name}, the strength of your ${pictures[0].description} photo is impressive.",
+    "Hi ${name}, your ${pictures[1].description} moment is full of life and energy!",
+    "Hello ${name}, that ${pictures[2].description} shot is a true statement piece.",
+    "Greetings ${name}, you have a remarkable ability to capture bold images, like this ${pictures[0].description} one!"
+  ],
+  "Mysterious": [
+    "Hi ${name}, your ${pictures[0].description} photo is intriguing—what's the story behind it?",
+    "Hello ${name}, that ${pictures[1].description} shot has an air of mystery—care to share more?",
+    "Good evening ${name}, your ${pictures[2].description} image is captivating—what were you thinking?",
+    "Greetings ${name}, the concept behind your ${pictures[0].description} photo is fascinating.",
+    "Hi ${name}, I love how your ${pictures[1].description} shot invites curiosity.",
+    "Hello ${name}, your ${pictures[2].description} picture tells a compelling story.",
+    "Good day ${name}, the depth of your ${pictures[0].description} photo is impressive.",
+    "Hi ${name}, your ${pictures[1].description} moment is thought-provoking—any background info?",
+    "Hello ${name}, that ${pictures[2].description} image is rich with meaning.",
+    "Greetings ${name}, you have a unique perspective, beautifully captured in the ${pictures[0].description} shot!"
+  ],
+  "Funny": [
+    "Hey ${name}, your ${pictures[0].description} pic is hilarious—what were you guys up to?",
+    "Hi ${name}, that ${pictures[1].description} moment cracks me up—got any more?",
+    "Hello ${name}, I can't stop laughing at your ${pictures[2].description} photo!",
+    "Hey ${name}, your ${pictures[0].description} shot should be framed as a masterpiece of humor.",
+    "Hi ${name}, that ${pictures[1].description} image is pure comedy gold.",
+    "Hello ${name}, your ${pictures[2].description} moment is priceless—thanks for sharing!",
+    "Hey ${name}, I'm stealing your ${pictures[0].description} photo idea for my next shoot!",
+    "Hi ${name}, your ${pictures[1].description} pic is the highlight of my day!",
+    "Hello ${name}, that ${pictures[2].description} shot deserves an award for best comedic timing.",
+    "Hey ${name}, your ${pictures[0].description} photo is a reminder not to take life too seriously!"
+  ],
+  "Romantic": [
+    "Hi ${name}, your ${pictures[0].description} photo is like a scene from a love story—what's the tale?",
+    "Hello ${name}, that ${pictures[1].description} moment is so sweet, it could be in a romance novel!",
+    "Good evening ${name}, your ${pictures[2].description} image radiates love and warmth.",
+    "Greetings ${name}, the chemistry in your ${pictures[0].description} shot is palpable!",
+    "Hi ${name}, your ${pictures[1].description} picture is like a breath of fresh air.",
+    "Hello ${name}, I can't help but smile at your ${pictures[2].description} photo.",
+    "Good day ${name}, your ${pictures[0].description} moment is simply delightful.",
+    "Hi ${name}, that ${pictures[1].description} image is a perfect capture of happiness.",
+    "Hello ${name}, your ${pictures[2].description} shot is a ray of sunshine!",
+    "Greetings ${name}, you have a gift for capturing sweet moments, like in this ${pictures[0].description} photo."
+  ]
+}
