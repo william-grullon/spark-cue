@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import db from '@/lib/db';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = Number(params.id);
+  const idParse = z.object({ id: z.coerce.number() }).safeParse(params);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
+  }
+  const id = idParse.data.id;
   const row = db.prepare('SELECT * FROM profiles WHERE id = ?').get(id);
   if (!row) return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
   const profile = { ...row, pictures: JSON.parse(row.pictures) };
@@ -10,8 +15,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = Number(params.id);
-  const { name, bio, location, pictures, avatar_url } = await request.json();
+  // validate id param
+  const idParse = z.object({ id: z.coerce.number() }).safeParse(params);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
+  }
+  const id = idParse.data.id;
+  // validate body
+  const schema = z.object({ name: z.string(), bio: z.string().optional(), location: z.string().optional(), pictures: z.array(z.string()), avatar_url: z.string().optional() });
+  const body = await request.json();
+  const parse = schema.safeParse(body);
+  if (!parse.success) {
+    return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+  }
+  const { name, bio, location, pictures, avatar_url } = parse.data;
   db.prepare(
     `UPDATE profiles SET name=?, bio=?, location=?, pictures=?, avatar_url=? WHERE id=?`
   ).run(name, bio || null, location || null, JSON.stringify(pictures), avatar_url || null, id);
@@ -20,7 +37,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = Number(params.id);
+  const idParse = z.object({ id: z.coerce.number() }).safeParse(params);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
+  }
+  const id = idParse.data.id;
   const deleted = db.prepare('DELETE FROM profiles WHERE id = ?').run(id);
   return NextResponse.json({ success: deleted.changes > 0 });
 }

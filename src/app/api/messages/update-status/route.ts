@@ -1,8 +1,15 @@
+import { z } from 'zod';
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 
 export async function POST(request: NextRequest) {
-  const { id, action } = await request.json(); // action: 'sent' or 'responded'
+  const schema = z.object({ id: z.number(), action: z.enum(['sent', 'responded']) });
+  const body = await request.json();
+  const parse = schema.safeParse(body);
+  if (!parse.success) {
+    return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+  }
+  const { id, action } = parse.data;
   const msg = db.prepare('SELECT * FROM messages WHERE id = ?').get(id);
   if (!msg) return NextResponse.json({ error: 'Message not found' }, { status: 404 });
 
