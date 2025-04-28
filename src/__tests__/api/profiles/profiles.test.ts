@@ -30,7 +30,7 @@ describe('Profiles API - POST', () => {
       name: 'Test User',
       bio: 'Test bio',
       location: 'Test location',
-      pictures: ['https://example.com/image.jpg'],
+      pictures: [{ description: 'https://example.com/image.jpg' }],
       avatar_url: 'https://example.com/avatar.jpg',
     };
 
@@ -41,13 +41,13 @@ describe('Profiles API - POST', () => {
 
     // Mock db implementation for this test
     const mockRunResult = { lastInsertRowid: 1 };
-    const mockGet = { 
-      id: 1, 
-      ...mockProfile, 
+    const mockGet = {
+      id: 1,
+      ...mockProfile,
       pictures: JSON.stringify(mockProfile.pictures),
-      created_at: new Date().toISOString() 
+      created_at: new Date().toISOString()
     };
-    
+
     const mockPrepare = db.prepare as jest.Mock;
     const insertStmt = {
       run: jest.fn().mockReturnValue(mockRunResult)
@@ -55,7 +55,7 @@ describe('Profiles API - POST', () => {
     const selectStmt = {
       get: jest.fn().mockReturnValue(mockGet)
     };
-    
+
     // First call to prepare is for the INSERT
     mockPrepare.mockReturnValueOnce(insertStmt);
     // Second call to prepare is for the SELECT
@@ -64,17 +64,23 @@ describe('Profiles API - POST', () => {
     // Call the API function
     const response = await POST(mockRequest);
 
+    // Expected result after pictures are parsed back to an array
+    const expectedResponse = {
+      ...mockGet,
+      pictures: mockProfile.pictures
+    };
+
     // Assertions
     expect(NextResponse.json).toHaveBeenCalledWith(
-      mockGet,
+      expectedResponse,
       { status: 201 }
     );
     expect(db.prepare).toHaveBeenNthCalledWith(1, `INSERT INTO profiles (name, bio, location, pictures, avatar_url) VALUES (?, ?, ?, ?, ?)`);
     expect(insertStmt.run).toHaveBeenCalledWith(
-      mockProfile.name, 
-      mockProfile.bio, 
-      mockProfile.location, 
-      JSON.stringify(mockProfile.pictures), 
+      mockProfile.name,
+      mockProfile.bio,
+      mockProfile.location,
+      JSON.stringify(mockProfile.pictures),
       mockProfile.avatar_url
     );
     expect(db.prepare).toHaveBeenNthCalledWith(2, 'SELECT * FROM profiles WHERE id = ?');
@@ -86,7 +92,7 @@ describe('Profiles API - POST', () => {
     const mockInvalidProfile = {
       bio: 'Test bio',
       location: 'Test location',
-      pictures: ['https://example.com/image.jpg'],
+      pictures: [{ description: 'https://example.com/image.jpg' }],
     };
 
     // Mock implementation for request.json()
@@ -99,7 +105,7 @@ describe('Profiles API - POST', () => {
 
     // Assertions
     expect(NextResponse.json).toHaveBeenCalledWith(
-      { error: 'Invalid input' }, 
+      { error: 'Invalid input' },
       { status: 400 }
     );
     expect(db.prepare).not.toHaveBeenCalled();

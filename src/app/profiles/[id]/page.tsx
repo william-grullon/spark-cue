@@ -6,6 +6,7 @@ import fetcher from "@/utils/fetcher";
 import MessageForm from "@/components/MessageForm";
 import AnalyticsChart from "@/components/AnalyticsChart";
 import Image from "next/image";
+import React from "react";
 
 // Define a proper type for messages
 interface Message {
@@ -19,8 +20,12 @@ interface Message {
   profile_id: number;
 }
 
-export default function ProfileDetail({ params }: { params: { id: string } }) {
-  const { id } = params;
+// Use any type for params to satisfy Next.js 15.x type constraints
+export default function ProfileDetail({ params }: any) {
+  // Unwrap params using React.use() to access the ID
+  const unwrappedParams = React.use(params);
+  const { id } = unwrappedParams;
+  
   const router = useRouter();
   const { data: profile, error: profileError } = useSWR(
     `/api/profiles/${id}`,
@@ -30,11 +35,15 @@ export default function ProfileDetail({ params }: { params: { id: string } }) {
     data: messages,
     error: msgError,
     mutate: reloadMessages,
-  } = useSWR(`/api/messages?profile_id=${id}`, fetcher);
+  } = useSWR(`/api/messages/index?profile_id=${id}`, fetcher);
   const { data: analytics } = useSWR(
     `/api/analytics/time-of-day?profile_id=${id}`,
     fetcher
   );
+
+  // Debug the errors
+  console.log("Profile Error:", profileError);
+  console.log("Messages Error:", msgError);
 
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 

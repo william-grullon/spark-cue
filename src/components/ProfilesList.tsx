@@ -13,6 +13,17 @@ interface Props {
 }
 
 export default function ProfilesList({ profiles }: Props) {
+  if (!profiles || profiles.length === 0) {
+    return (
+      <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded shadow text-center">
+        <p className="text-gray-700 dark:text-gray-300 mb-2">No profiles found</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Create a new profile to get started
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {profiles.map((profile) => (

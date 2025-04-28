@@ -91,7 +91,7 @@ describe('Profile by ID API', () => {
 
       // Assertions
       expect(NextResponse.json).toHaveBeenCalledWith(
-        { error: 'Invalid id' },
+        { error: 'Invalid id format' },
         { status: 400 }
       );
       expect(db.prepare).not.toHaveBeenCalled();
@@ -104,7 +104,7 @@ describe('Profile by ID API', () => {
         name: 'Updated User',
         bio: 'Updated bio',
         location: 'Updated location',
-        pictures: ['https://example.com/updated.jpg'],
+        pictures: [{ description: 'https://example.com/updated.jpg' }],
         avatar_url: 'https://example.com/updated-avatar.jpg',
       };
 
@@ -116,18 +116,18 @@ describe('Profile by ID API', () => {
 
       // Mock db implementation for this test
       const mockPrepare = db.prepare as jest.Mock;
-      
+
       // First prepare call is for the UPDATE
       const updateStmt = {
         run: jest.fn().mockReturnValue({ changes: 1 })
       };
       mockPrepare.mockReturnValueOnce(updateStmt);
-      
+
       // Second prepare call is for the SELECT to get updated profile
-      const updatedDbProfile = { 
-        id: 1, 
-        ...updatedProfile, 
-        pictures: JSON.stringify(updatedProfile.pictures) 
+      const updatedDbProfile = {
+        id: 1,
+        ...updatedProfile,
+        pictures: JSON.stringify(updatedProfile.pictures)
       };
       const selectStmt = {
         get: jest.fn().mockReturnValue(updatedDbProfile)
@@ -138,7 +138,7 @@ describe('Profile by ID API', () => {
       await PUT(mockRequest, mockParams);
 
       // Assertions
-      expect(db.prepare).toHaveBeenNthCalledWith(1, 
+      expect(db.prepare).toHaveBeenNthCalledWith(1,
         `UPDATE profiles SET name=?, bio=?, location=?, pictures=?, avatar_url=? WHERE id=?`
       );
       expect(updateStmt.run).toHaveBeenCalledWith(
