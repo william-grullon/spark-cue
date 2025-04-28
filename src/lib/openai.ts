@@ -11,6 +11,9 @@ export async function generateMessage(
   prompt: string,
   model = process.env.AI_MODEL || "gpt-4-turbo"
 ) {
+  // Log the prompt being sent to OpenAI
+  console.log("Sending prompt to OpenAI:", prompt);
+
   // Skip API calls during build time if using the dummy key
   if (apiKey === "dummy-key-for-build-time") {
     console.log("Skipping OpenAI API call during build time");
@@ -27,5 +30,10 @@ export async function generateMessage(
     messages: [{ role: "user", content: prompt }],
   });
   const content = response.choices[0].message?.content;
+  // Log the response from OpenAI
+  console.log("Received response from OpenAI:", response);
+  // Log the response content
+  console.log("Response content:", content);
+
   return content || "";
 }

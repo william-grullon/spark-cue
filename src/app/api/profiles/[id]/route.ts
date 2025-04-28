@@ -3,8 +3,9 @@ import { z } from "zod";
 import db from "@/lib/db";
 
 export async function GET(request: NextRequest, context: { params: { id: string } }) {
-  const { params } = context; // Explicitly destructure params from context
   try {
+    // Ensure params is properly awaited
+    const { params } = await context;
     const id = parseInt(params.id, 10);
 
     if (isNaN(id)) {
@@ -25,8 +26,9 @@ export async function GET(request: NextRequest, context: { params: { id: string 
 }
 
 export async function PUT(request: NextRequest, context: { params: { id: string } }) {
-  const { params } = context; // Explicitly destructure params from context
   try {
+    // Ensure params is properly awaited
+    const { params } = await context;
     const id = parseInt(params.id, 10);
 
     if (isNaN(id)) {
@@ -72,8 +74,9 @@ export async function PUT(request: NextRequest, context: { params: { id: string 
 }
 
 export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
-  const { params } = context; // Explicitly destructure params from context
   try {
+    // Ensure params is properly awaited
+    const { params } = await context;
     const id = parseInt(params.id, 10);
 
     if (isNaN(id)) {
