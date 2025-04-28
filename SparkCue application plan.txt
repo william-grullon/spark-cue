@@ -1,7 +1,7 @@
 SparkCue application plan
 
 ```plaintext
-Create a full Next.js app called "SparkCue" with built-in profile management and the following features:
+Create a full Next.js app called "spark-cue" with built-in profile management and the following features:
 
 0. Profiles:
    - Users can create, edit, delete “Profiles” representing each match or contact.
@@ -228,7 +228,7 @@ Create a full Next.js app called "SparkCue" with built-in profile management and
    - Mobile builds via Expo or Capacitor.
 
 12. App Name:
-   - SparkCue
+   - spark-cue
 ```
 
 Make code modular, well-documented, optimized for fast startup and minimal image size.```
