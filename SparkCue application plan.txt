@@ -1,0 +1,234 @@
+SparkCue application plan
+
+```plaintext
+Create a full Next.js app called "SparkCue" with built-in profile management and the following features:
+
+0. Profiles:
+   - Users can create, edit, delete “Profiles” representing each match or contact.
+   - Each Profile includes: name, optional bio, optional location, structured picture descriptions (JSON), optional avatar image URL.
+   - If no avatar URL is provided, display an embedded default SVG avatar.
+   - ProfilesList component must display avatar, name, and preview of the most recent message.
+   - ProfileDetail component must show profile info, full message history, and analytics charts per profile.
+
+1. Message Generation:
+   - For each Profile, generate opener messages using:
+     • AI (OpenAI gpt-4-turbo or configured provider/model via ENV: AI_PROVIDER, AI_MODEL)
+     • Automatic fallback to keyword templates from `/data/fallbackTemplates.json` (≥10 templates per persona) if AI unavailable.
+   - Personas: Classy, Playful, Flirty, Adventurous, Intellectual, Sweet, Bold, Mysterious, Funny, Romantic.
+   - Save each generated message linked to profile, with metadata: source (AI/Fallback), persona, timestamps, success, response latency.
+
+2. Frontend:
+   - Next.js, React, Tailwind CSS.
+   - MessageForm (in ProfileDetail) with required: name (read-only), picture descriptions, persona selector; optional: bio, location.
+   - Use React Hook Form for validation and sanitization.
+   - Offline support: localStorage (web) and AsyncStorage (mobile) to cache profiles and unsent messages; sync when online.
+   - Actions: Generate, Save, Mark Sent, Mark Responded; display generated message, metadata, and sync status.
+
+3. Backend/API:
+   - Next.js API routes with CORS enabled.
+   - `/api/profiles`: GET, POST, PUT, DELETE CRUD operations.
+   - `/api/messages/generate`: attempt AI generation; fallback to templates.
+   - `/api/messages/add`: save generated message data.
+   - `/api/messages`: list messages (filter by profile_id).
+   - `/api/messages/update-status`: update sent/responded timestamps, compute latency.
+   - `/api/analytics/time-of-day`: aggregate hourly engagement and success rates (global or per profile).
+   - Future: `/api/billing`, `/api/admin/provider`.
+
+4. Data/config:
+   - `/data/fallbackTemplates.json`: JSON mapping each persona to ≥10 fallback templates using variables `${name}`, `${pictures[N].description}`, `${location}`.
+   - **Sample `/data/fallbackTemplates.json`:**
+```json
+{
+  "Classy": [
+    "Hi ${name}, your ${pictures[0].description} photo radiates elegance; what's the story behind it?",
+    "Hello ${name}, you brought style to ${pictures[1].description}—care to share where that was?",
+    "Good evening ${name}, that ${pictures[2].description} scene looks straight out of a magazine!",
+    "Greetings ${name}, your ${pictures[0].description} shot exudes sophistication—tell me more about it.",
+    "Hi ${name}, your refined taste at ${pictures[1].description} is inspiring—what drew you there?",
+    "Hello ${name}, I admire how you captured ${pictures[2].description} with such grace.",
+    "Good day ${name}, the composition of your ${pictures[0].description} photo is stunning.",
+    "Hi ${name}, your ${pictures[1].description} moment feels timeless—any background details?",
+    "Hello ${name}, that ${pictures[2].description} image showcases true elegance.",
+    "Greetings ${name}, you’ve mastered the art of the ${pictures[0].description} shot!"
+  ],
+  "Playful": [
+    "Hey ${name}, your ${pictures[0].description} smile is contagious—mind sharing the secret?",
+    "Yo ${name}, that ${pictures[1].description} moment looks like a blast—got tips?",
+    "Hi ${name}, are you always this upbeat or was ${pictures[2].description} a special occasion?",
+    "Hey ${name}, I dare you to top that ${pictures[0].description} photo!",
+    "Yo ${name}, your ${pictures[1].description} vibe is next-level fun—what's the story?",
+    "Hi ${name}, that ${pictures[2].description} shot has me laughing—I need the punchline!",
+    "Hey ${name}, I'm convinced you're secretly a comedian with that ${pictures[0].description} grin.",
+    "Yo ${name}, care to teach me the art of epic ${pictures[1].description}?",
+    "Hi ${name}, is ${pictures[2].description} your go-to for good times?",
+    "Hey ${name}, your ${pictures[0].description} energy is unmatched—let's keep the fun rolling!"
+  ],
+  "Flirty": [
+    "Your ${pictures[0].description} photo has me swooning—what’s the story, ${name}?",
+    "Hi ${name}, that ${pictures[1].description} shot is dangerously charming—should I be careful?",
+    "Hello ${name}, I can’t stop staring at your ${pictures[2].description} pic—mind if I ask more?",
+    "Hey ${name}, your ${pictures[0].description} smile is pure temptation.",
+    "Hi ${name}, that ${pictures[1].description} moment looks like a dream—am I in it?",
+    "Hello ${name}, the way you captured ${pictures[2].description} is utterly captivating.",
+    "Hey ${name}, you and ${pictures[0].description} have undeniable chemistry.",
+    "Hi ${name}, care to share how you got that ${pictures[1].description} shot so perfect?",
+    "Hello ${name}, I think your ${pictures[2].description} image just stole my heart.",
+    "Hey ${name}, that ${pictures[0].description} photo should come with a warning label!"
+  ],
+  "Adventurous": [
+    "Hiking at ${pictures[0].description} looks epic—what’s the next peak you’re aiming for, ${name}?",
+    "Your ${pictures[1].description} sunset shot is stunning—where to next?",
+    "Hey ${name}, conquering ${pictures[2].description} must have been a thrill—tell me about it!",
+    "Hi ${name}, that ${pictures[0].description} trail looks like a movie scene—any fun stories?",
+    "Hello ${name}, your ${pictures[1].description} adventure has me itching to explore.",
+    "Hey ${name}, which was harder: getting to ${pictures[2].description} or posing for that pic?",
+    "Hi ${name}, the view at ${pictures[0].description} is spectacular—mind sharing your route?",
+    "Hello ${name}, your ${pictures[1].description} hike is next-level—what’s your secret?",
+    "Hey ${name}, tell me the wildest moment from your ${pictures[2].description} excursion.",
+    "Hi ${name}, ready for your next adventure after ${pictures[0].description}?"
+  ],
+  "Intellectual": [
+    "Your ${pictures[0].description} image has a depth to it—what inspired you, ${name}?",
+    "Hello ${name}, the composition of your ${pictures[1].description} shot is thought-provoking.",
+    "Hi ${name}, that ${pictures[2].description} scene suggests a curious mind—what’s the backstory?",
+    "Greetings ${name}, I appreciate the subtlety in your ${pictures[0].description} capture.",
+    "Hello ${name}, your ${pictures[1].description} photo feels like it has a hidden narrative.",
+    "Hi ${name}, what literature or art influenced your ${pictures[2].description} moment?",
+    "Hello ${name}, your ${pictures[0].description} shot speaks volumes—care to elaborate?",
+    "Greetings ${name}, there’s an intellectual charm in your ${pictures[1].description} pic.",
+    "Hi ${name}, I sense a story behind ${pictures[2].description}—what’s it?",
+    "Hello ${name}, your ${pictures[0].description} photo is a study in elegance and thoughtfulness."
+  ],
+  "Sweet": [
+    "Your ${pictures[0].description} smile is heartwarming—where was that, ${name}?",
+    "Hi ${name}, you look utterly sweet in your ${pictures[1].description} photo.",
+    "Hello ${name}, that ${pictures[2].description} moment feels like a warm hug.",
+    "Hey ${name}, your ${pictures[0].description} image just made my day brighter.",
+    "Hi ${name}, is ${pictures[1].description} your favorite happy place?",
+    "Hello ${name}, your ${pictures[2].description} shot radiates kindness.",
+    "Hey ${name}, that ${pictures[0].description} capture is pure sweetness.",
+    "Hi ${name}, I could look at your ${pictures[1].description} photo all day.",
+    "Hello ${name}, your ${pictures[2].description} smile is contagious.",
+    "Hey ${name}, that ${pictures[0].description} scene is simply adorable."
+  ],
+  "Bold": [
+    "Your ${pictures[0].description} photo is fearless—what pushed you, ${name}?",
+    "Hi ${name}, that ${pictures[1].description} angle is daring and awesome.",
+    "Hello ${name}, your ${pictures[2].description} shot shows serious confidence.",
+    "Hey ${name}, you and ${pictures[0].description} make quite a bold statement.",
+    "Hi ${name}, that ${pictures[1].description} moment must have taken guts.",
+    "Hello ${name}, I admire the bold spirit in your ${pictures[2].description} pic.",
+    "Hey ${name}, that ${pictures[0].description} perspective is striking.",
+    "Hi ${name}, your ${pictures[1].description} shot is unapologetically bold.",
+    "Hello ${name}, you’ve got a daring eye for ${pictures[2].description}.",
+    "Hey ${name}, that ${pictures[0].description} capture commands attention."
+  ],
+  "Mysterious": [
+    "Your ${pictures[0].description} photo is intriguingly enigmatic—care to share more?",
+    "Hello ${name}, that ${pictures[1].description} moment leaves me curious.",
+    "Hi ${name}, your ${pictures[2].description} image has a wonderful mystery to it.",
+    "Greetings ${name}, there's something captivatingly mysterious about ${pictures[0].description}.",
+    "Hi ${name}, you’ve piqued my curiosity with ${pictures[1].description}.",
+    "Hello ${name}, that ${pictures[2].description} shot feels like a riddle.",
+    "Hey ${name}, I’m drawn to the mystery in your ${pictures[0].description} image.",
+    "Hi ${name}, your ${pictures[1].description} scene suggests untold stories.",
+    "Greetings ${name}, the allure of your ${pictures[2].description} photo is irresistible.",
+    "Hello ${name}, that ${pictures[0].description} capture is deliciously cryptic."
+  ],
+  "Funny": [
+    "I nearly spit out my drink when I saw your ${pictures[0].description} shot, ${name}!",
+    "Hey ${name}, that ${pictures[1].description} moment is comedy gold.",
+    "Hi ${name}, your ${pictures[2].description} stunt deserves a standing ovation.",
+    "Hello ${name}, you’ve got serious skills to pull off ${pictures[0].description} so hilariously.",
+    "Hey ${name}, I can’t stop laughing at your ${pictures[1].description} pic!",
+    "Hi ${name}, you’re a natural comedian in that ${pictures[2].description} photo.",
+    "Hello ${name}, that ${pictures[0].description} look is too funny not to ask about.",
+    "Hey ${name}, your ${pictures[1].description} shot made my day.",
+    "Hi ${name}, I’m convinced your ${pictures[2].description} moment was pure improv.",
+    "Hello ${name}, that ${pictures[0].description} photo is next-level hilarious!"
+  ],
+  "Romantic": [
+    "That ${pictures[0].description} photo looks like a scene from a romance novel, ${name}.",
+    "Hi ${name}, your ${pictures[1].description} moment is straight out of a love story.",
+    "Hello ${name}, I feel the romance in your ${pictures[2].description} capture.",
+    "Hey ${name}, your ${pictures[0].description} smile sets my heart aflutter.",
+    "Hi ${name}, that ${pictures[1].description} shot is pure poetry.",
+    "Hello ${name}, the way you captured ${pictures[2].description} is truly romantic.",
+    "Hey ${name}, your ${pictures[0].description} image makes me believe in love at first sight.",
+    "Hi ${name}, there's so much romance in your ${pictures[1].description} moment.",
+    "Hello ${name}, I’m enchanted by the magic in your ${pictures[2].description} photo.",
+    "Hey ${name}, your ${pictures[0].description} capture is the epitome of romance!"
+  ]
+}
+```
+5. Database:
+   - SQLite tables:
+     • `profiles` (id, name, bio, location, pictures JSON, avatar_url, created_at)
+     • `messages` (id, profile_id, source, persona, message, created_at, sent_at, responded_at, response_latency, success)
+``` Database:
+   - SQLite tables:
+     • `profiles` (id, name, bio, location, pictures JSON, avatar_url, created_at)
+     • `messages` (id, profile_id, source, persona, message, created_at, sent_at, responded_at, response_latency, success)
+   - Plan future tables: `billing`, `provider_config`.
+
+6. Project Structure:
+   /components/ProfilesList.js
+   /components/ProfileDetail.js
+   /components/MessageForm.js
+   /components/AnalyticsChart.js
+   /pages/index.js           // redirect to /profiles
+   /pages/profiles/index.js
+   /pages/profiles/[id].js
+   /pages/api/profiles/index.js
+   /pages/api/profiles/[id].js
+   /pages/api/messages/generate.js
+   /pages/api/messages/add.js
+   /pages/api/messages/index.js
+   /pages/api/messages/update-status.js
+   /pages/api/analytics/time-of-day.js
+   /data/fallbackTemplates.json
+   /lib/db.js
+   /lib/openai.js
+   /utils/messageGenerator.js
+   /utils/analytics.js
+   /styles/globals.css
+   Dockerfile
+   docker-compose.yml
+   .env.example
+   .gitignore
+
+7. .gitignore:
+   node_modules/
+   .next/
+   .env.local
+   .env.*.local
+   .DS_Store
+   npm-debug.log*
+   yarn-error.log*
+   messages.db
+   coverage/
+   .vscode/
+
+8. Docker:
+   - Dockerfile: node:18-alpine, install deps, build, expose 3000, CMD ["npm","start"].
+   - docker-compose.yml: service app, env vars (OPENAI_API_KEY, AI_PROVIDER, AI_MODEL, billing keys), volume mount.
+
+9. Extras:
+   - Responsive UI, dark mode, per-profile charting (Recharts/Chart.js/Victory).
+   - Mobile compatibility via React Native or Capacitor.
+   - Billing dashboard, admin tools.
+
+10. Config:
+   - `.env.local`: OPENAI_API_KEY, STRIPE_*, AI_PROVIDER, AI_MODEL.
+   - Input sanitization, CORS, error handling.
+
+11. Deployment:
+   - `npm install`, `npm run dev` (web).
+   - `docker-compose up --build` (container).
+   - Mobile builds via Expo or Capacitor.
+
+12. App Name:
+   - SparkCue
+```
+
+Make code modular, well-documented, optimized for fast startup and minimal image size.```
