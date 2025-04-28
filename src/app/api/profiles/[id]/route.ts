@@ -83,8 +83,21 @@ export async function DELETE(request: NextRequest, context: { params: { id: stri
       return NextResponse.json({ error: "Invalid id format" }, { status: 400 });
     }
 
-    const deleted = db.prepare("DELETE FROM profiles WHERE id = ?").run(id);
-    return NextResponse.json({ success: deleted.changes > 0 });
+    // Create a database transaction to ensure all operations complete together
+    const transaction = db.transaction(() => {
+      // First delete all messages associated with this profile
+      const deletedMessages = db.prepare("DELETE FROM messages WHERE profile_id = ?").run(id);
+      console.log(`Deleted ${deletedMessages.changes} messages for profile ${id}`);
+
+      // Then delete the profile
+      const deletedProfile = db.prepare("DELETE FROM profiles WHERE id = ?").run(id);
+      return deletedProfile.changes > 0;
+    });
+
+    // Execute the transaction
+    const success = transaction();
+
+    return NextResponse.json({ success });
   } catch (error) {
     console.error("Error deleting profile:", error);
     return NextResponse.json({ error: "Failed to delete profile" }, { status: 500 });
