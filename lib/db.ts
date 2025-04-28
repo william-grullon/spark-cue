@@ -4,6 +4,8 @@ import Database from 'better-sqlite3';
 const dbPath = process.env.DB_PATH || path.resolve(process.cwd(), 'db.sqlite');
 const db = new Database(dbPath);
 
+db.pragma('foreign_keys = ON');
+
 // Initialize tables
 // profiles table
 db.prepare(`

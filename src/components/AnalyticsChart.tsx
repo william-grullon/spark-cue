@@ -31,6 +31,14 @@ interface AnalyticsChartProps {
 }
 
 export default function AnalyticsChart({ data }: AnalyticsChartProps) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-center p-4 text-gray-500">
+        No analytics data available.
+      </div>
+    );
+  }
+
   const labels = data.map((d) => d.hour);
   const successData = data.map((d) => d.success_rate * 100);
 
