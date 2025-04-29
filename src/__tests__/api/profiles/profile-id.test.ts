@@ -16,6 +16,9 @@ jest.mock('../../../../lib/db', () => ({
     run: jest.fn(),
     get: jest.fn(),
   }),
+  transaction: jest.fn((fn) => {
+    return () => fn();
+  }),
 }));
 
 describe('Profile by ID API', () => {
@@ -184,18 +187,31 @@ describe('Profile by ID API', () => {
       const mockParams = { params: { id: '1' } };
 
       // Mock db implementation
-      const mockPrepare = db.prepare as jest.Mock;
-      const deleteStmt = {
-        run: jest.fn().mockReturnValue({ changes: 1 })
-      };
-      mockPrepare.mockReturnValueOnce(deleteStmt);
+      const mockTransaction = db.transaction as jest.Mock;
+      mockTransaction.mockImplementation((fn) => {
+        return () => {
+          // Inside the transaction function
+          const deleteMessagesStmt = {
+            run: jest.fn().mockReturnValue({ changes: 2 }) // Mocking 2 messages deleted
+          };
+          (db.prepare as jest.Mock).mockReturnValueOnce(deleteMessagesStmt);
+
+          const deleteProfileStmt = {
+            run: jest.fn().mockReturnValue({ changes: 1 }) // Profile was deleted
+          };
+          (db.prepare as jest.Mock).mockReturnValueOnce(deleteProfileStmt);
+
+          return fn(); // Executing the transaction function
+        };
+      });
 
       // Call the API function
       await DELETE(mockRequest, mockParams);
 
       // Assertions
-      expect(db.prepare).toHaveBeenCalledWith('DELETE FROM profiles WHERE id = ?');
-      expect(deleteStmt.run).toHaveBeenCalledWith(1);
+      expect(db.transaction).toHaveBeenCalled();
+      expect(db.prepare).toHaveBeenNthCalledWith(1, 'DELETE FROM messages WHERE profile_id = ?');
+      expect(db.prepare).toHaveBeenNthCalledWith(2, 'DELETE FROM profiles WHERE id = ?');
       expect(NextResponse.json).toHaveBeenCalledWith({ success: true });
     });
 
@@ -205,18 +221,31 @@ describe('Profile by ID API', () => {
       const mockParams = { params: { id: '999' } };
 
       // Mock db implementation
-      const mockPrepare = db.prepare as jest.Mock;
-      const deleteStmt = {
-        run: jest.fn().mockReturnValue({ changes: 0 })
-      };
-      mockPrepare.mockReturnValueOnce(deleteStmt);
+      const mockTransaction = db.transaction as jest.Mock;
+      mockTransaction.mockImplementation((fn) => {
+        return () => {
+          // Inside the transaction function
+          const deleteMessagesStmt = {
+            run: jest.fn().mockReturnValue({ changes: 0 }) // No messages to delete
+          };
+          (db.prepare as jest.Mock).mockReturnValueOnce(deleteMessagesStmt);
+
+          const deleteProfileStmt = {
+            run: jest.fn().mockReturnValue({ changes: 0 }) // Profile didn't exist
+          };
+          (db.prepare as jest.Mock).mockReturnValueOnce(deleteProfileStmt);
+
+          return fn(); // Executing the transaction function
+        };
+      });
 
       // Call the API function
       await DELETE(mockRequest, mockParams);
 
       // Assertions
-      expect(db.prepare).toHaveBeenCalledWith('DELETE FROM profiles WHERE id = ?');
-      expect(deleteStmt.run).toHaveBeenCalledWith(999);
+      expect(db.transaction).toHaveBeenCalled();
+      expect(db.prepare).toHaveBeenNthCalledWith(1, 'DELETE FROM messages WHERE profile_id = ?');
+      expect(db.prepare).toHaveBeenNthCalledWith(2, 'DELETE FROM profiles WHERE id = ?');
       expect(NextResponse.json).toHaveBeenCalledWith({ success: false });
     });
   });
